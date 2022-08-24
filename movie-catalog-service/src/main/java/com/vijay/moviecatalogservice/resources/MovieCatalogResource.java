@@ -1,5 +1,6 @@
 package com.vijay.moviecatalogservice.resources;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.vijay.moviecatalogservice.models.CatalogItem;
 import com.vijay.moviecatalogservice.models.Movie;
 import com.vijay.moviecatalogservice.models.UserRating;
@@ -32,6 +34,7 @@ public class MovieCatalogResource {
 	private DiscoveryClient discoveryClient;
 
 	@RequestMapping("/{userId}")
+	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
 
 //		List<Rating> ratings = Arrays.asList(new Rating("1234", 4), new Rating("5678", 3));
@@ -45,6 +48,12 @@ public class MovieCatalogResource {
 
 		return catalogs;
 	}
+	
+	
+	public List<CatalogItem> getFallbackCatalogItem(@PathVariable("userId") String userId) {
+		return Arrays.asList( new CatalogItem("No Movie", "", 0));
+	}
+	
 	
 	@RequestMapping("/getMovieInfoServiceInstances")
 	public List<ServiceInstance> getAllInstances() {
