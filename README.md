@@ -96,6 +96,7 @@ http://localhost:8761/
 ```
 
 > Note: in pom.xml you need below changes as Hystix has depricated and no longer available in `start.spring.io` :
+```
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -112,3 +113,4 @@ http://localhost:8761/
 		<groupId>org.springframework.cloud</groupId>
 		<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
 	</dependency>
+```
