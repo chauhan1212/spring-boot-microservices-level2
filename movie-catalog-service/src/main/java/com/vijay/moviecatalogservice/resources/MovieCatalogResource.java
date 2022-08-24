@@ -1,6 +1,5 @@
 package com.vijay.moviecatalogservice.resources;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -10,12 +9,11 @@ import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
 
-import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 import com.vijay.moviecatalogservice.models.CatalogItem;
-import com.vijay.moviecatalogservice.models.Movie;
 import com.vijay.moviecatalogservice.models.UserRating;
+import com.vijay.moviecatalogservice.services.MovieInfoService;
+import com.vijay.moviecatalogservice.services.UserRatingInfoService;
 
 @RestController
 @RequestMapping(path = "/catalog")
@@ -28,30 +26,22 @@ public class MovieCatalogResource {
 	 */
 	
 	@Autowired
-	private RestTemplate restTemplate;
+	private DiscoveryClient discoveryClient;
 	
 	@Autowired
-	private DiscoveryClient discoveryClient;
+	MovieInfoService movieInfo;
+
+	@Autowired
+	UserRatingInfoService userRatingInfo;
+
 
 	@RequestMapping("/{userId}")
-	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem")
 	public List<CatalogItem> getCatalog(@PathVariable("userId") String userId) {
-
-//		List<Rating> ratings = Arrays.asList(new Rating("1234", 4), new Rating("5678", 3));
-		
-		UserRating ratings = restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId, UserRating.class);
-
-		List<CatalogItem> catalogs = ratings.getRatings().stream().map(rating -> {
-			Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
-			return new CatalogItem(movie.getMovieId(), movie.getDescription(), rating.getRating());
-		}).collect(Collectors.toList());
-
+		UserRating userRating = userRatingInfo.getUserRating(userId);
+		List<CatalogItem> catalogs = userRating.getRatings().stream().map(rating -> movieInfo.getCatalogItem(rating))
+				.collect(Collectors.toList());
+		System.out.println("Catalogs passed : " + catalogs);
 		return catalogs;
-	}
-	
-	
-	public List<CatalogItem> getFallbackCatalogItem(@PathVariable("userId") String userId) {
-		return Arrays.asList( new CatalogItem("No Movie", "", 0));
 	}
 	
 	
