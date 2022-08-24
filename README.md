@@ -1,8 +1,6 @@
 ### spring-boot-microservices-level2
 > main commit conatins video from 1 to 16
 
-From Video 17 to 23 (End of this course)
-
 | Software     | Version      |
 | ------       | ------       |
 | Java         |  "1.8.0_161" |
@@ -10,7 +8,6 @@ From Video 17 to 23 (End of this course)
 | Spring Boot  |  "2.7.2"     |
 
 > Note: `JAVA_HOME` required to run `mvn package`
-
 > `mvn package` or `mvn install` for generate jar file in target directory.
 
 ```
@@ -37,6 +34,19 @@ http://localhost:8081/catalog/1234
     "name": "200",
     "desc": "Test Desc",
     "rating": 4
+  }
+]
+```
+```sh
+http://localhost:8081/catalog/1234
+```
+```
+If You stop (Movie info service (8082) and call this api then it should be return below reponse:
+[
+  {
+    "name": "No Movie",
+    "desc": "",
+    "rating": 0
   }
 ]
 ```
@@ -80,46 +90,25 @@ http://localhost:8083/ratingsdata/users/vijay
 }
 ```
 
-Eureka Server will have it's own UI.
+>Eureka Server will have it's own UI.
 ```
 http://localhost:8761/
 ```
 
-> `Branch v04 changes`
-- start.spring.io -> Add only one dependency `Eureka Server`
-
-- application.properties of descovery-server (Eureka Server)
-```sh
-server.port=8761
-eureka.client.registerWithEureka=false
-eureka.client.fetchRegistry=false
-```
-
-```
+> Note: in pom.xml you need below changes as Hystix has depricated and no longer available in `start.spring.io` :
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.3.7.RELEASE</version>
+		<relativePath/> <!-- lookup parent from repository -->
+	</parent>
+	
 	<properties>
-		<spring-cloud.version>2021.0.3</spring-cloud.version>
+		<java.version>1.8</java.version>
+		<spring-cloud.version>Hoxton.SR9</spring-cloud.version>
 	</properties>
 
-	<dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
-		</dependency>
-	</dependencies>    
-    
-  <dependencyManagement>
-	 <dependencies>
-		<dependency>
-			<groupId>org.springframework.cloud</groupId>
-			<artifactId>spring-cloud-dependencies</artifactId>
-			<version>${spring-cloud.version}</version>
-			<type>pom</type>
-			<scope>import</scope>
-		</dependency>
-	 </dependencies>
-	</dependencyManagement>
-```
-> it works default with 8761 port but if you change port then you have to specify a url in each eureka client like : eureka.client.servicUrl.defaultZone=http://localhost:7777/eureka
-
-
-
+	<dependency>
+		<groupId>org.springframework.cloud</groupId>
+		<artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+	</dependency>
