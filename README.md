@@ -55,9 +55,11 @@ If You stop (Movie info service (8082) and call this api then it should be retur
   }
 ]
 ```
+```sh
+http://localhost:8081/catalog/1234
 ```
-If You stop (Ratings data service (8083) and call this api then it should be return below reponse:
-
+```
+If You stop (Movie info service (8082) and call this api then it should be return below reponse:
   {
     "name": "Movie name not found",
     "desc": "",
