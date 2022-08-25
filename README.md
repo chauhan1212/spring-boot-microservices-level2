@@ -1,5 +1,5 @@
 ### spring-boot-microservices-level2
-> main commit conatins video from 19
+> v02 commit conatins video from 19
 
 | Software     | Version      |
 | ------       | ------       |
