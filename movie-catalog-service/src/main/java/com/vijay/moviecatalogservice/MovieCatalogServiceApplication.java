@@ -5,6 +5,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.circuitbreaker.EnableCircuitBreaker;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
+import org.springframework.cloud.netflix.hystrix.dashboard.EnableHystrixDashboard;
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.client.RestTemplate;
 
@@ -13,6 +14,7 @@ import org.springframework.web.client.RestTemplate;
 //@EnableEurekaClient is optional
 @EnableEurekaClient
 @EnableCircuitBreaker
+@EnableHystrixDashboard // This will enable Histrix Dashboard
 public class MovieCatalogServiceApplication {
 	
 	@Bean
@@ -31,6 +33,26 @@ public class MovieCatalogServiceApplication {
 	 */
 
 	//API: http://localhost:8081/catalog/123
+	/*
+	 * http://localhost:8081/catalog/1234
+	 * 
+	 * http://localhost:8082/movies/200
+	 * 
+	 * http://localhost:8083/ratingsdata/users/1234
+	 * 
+	 * http://localhost:8083/ratingsdata/1234
+	 * 
+	 * //Eureka Dashboard 
+	 * http://localhost:8761
+	 * 
+	 * // Hystrix Dashboard 
+	 * http://localhost:8081/hystrix
+	 * 
+	 * put below url in hystrix dashboard
+	 * http://localhost:8081/actuator/hystrix.stream
+	 *
+	 * https://api.themoviedb.org/3/movie/200?api_key=feb6f0eeaa0a72662967d77079850353
+	 */
 	public static void main(String[] args) {
 		SpringApplication.run(MovieCatalogServiceApplication.class, args);
 	}
