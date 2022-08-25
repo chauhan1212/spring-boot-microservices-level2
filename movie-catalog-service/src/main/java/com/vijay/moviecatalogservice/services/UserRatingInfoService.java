@@ -17,6 +17,9 @@ public class UserRatingInfoService {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	/*
+	 * This is bulkhead pattern
+	 */
 	@HystrixCommand(fallbackMethod = "getFallbackUserRating",
 			threadPoolKey = "catelogItemPool" , // theadPoolKey will create pool for allow 
 			threadPoolProperties =  {

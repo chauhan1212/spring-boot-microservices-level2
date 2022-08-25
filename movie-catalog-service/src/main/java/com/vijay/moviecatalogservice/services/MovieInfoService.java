@@ -16,6 +16,9 @@ public class MovieInfoService {
 	@Autowired
 	RestTemplate restTemplate;
 	
+	/*
+	 * This is bulkhead pattern
+	 */
 	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem",
 			threadPoolKey = "catelogItemPool" , // theadPoolKey will create pool for allow 
 			threadPoolProperties =  {
