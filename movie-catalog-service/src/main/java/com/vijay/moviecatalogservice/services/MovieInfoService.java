@@ -16,8 +16,11 @@ public class MovieInfoService {
 	@Autowired
 	RestTemplate restTemplate;
 	
-    @HystrixCommand(fallbackMethod = "getFallbackCatalogItem", commandProperties = {
-		    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds", value = "1000") } )
+	@HystrixCommand(fallbackMethod = "getFallbackCatalogItem",
+			threadPoolKey = "catelogItemPool" , // theadPoolKey will create pool for allow 
+			threadPoolProperties =  {
+    @HystrixProperty(name = "coreSize", value = "10"), // number of threads allow at a same time
+    @HystrixProperty(name = "maxQueueSize",value = "5" )} ) // number of threads will be on queue
 	public CatalogItem getCatalogItem(Rating rating) {
 		Movie movie = restTemplate.getForObject("http://movie-info-service/movies/" + rating.getMovieId(), Movie.class);
 		return new CatalogItem(movie.getName(), movie.getDescription(), rating.getRating());
