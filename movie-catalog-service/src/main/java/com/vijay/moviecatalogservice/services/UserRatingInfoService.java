@@ -17,11 +17,7 @@ public class UserRatingInfoService {
 	@Autowired
 	RestTemplate restTemplate;
 	
-	@HystrixCommand(fallbackMethod = "getFallbackUserRating",
-			threadPoolKey = "catelogItemPool" , // theadPoolKey will create pool for allow 
-			threadPoolProperties =  {
-    @HystrixProperty(name = "coreSize", value = "10"), // number of threads allow at a same time
-    @HystrixProperty(name = "maxQueueSize",value = "5" )} ) // number of threads will be on queue
+	@HystrixCommand(fallbackMethod = "getFallbackUserRating" ) // number of threads will be on queue
 	public UserRating getUserRating(String userId) {
 		return restTemplate.getForObject("http://ratings-data-service/ratingsdata/users/" + userId, UserRating.class);
 	}
